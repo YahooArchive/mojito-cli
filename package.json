@@ -22,8 +22,8 @@
   },
   "scripts": {
     "preinstall": "scripts/preinstall.sh",
-    "test": "node tests",
-    "cover": "istanbul cover --dir artifacts/coverage -- tests",
+    "test": "tap -d tests/*.js",
+    "cover": "istanbul cover --dir artifacts/coverage -- test",
     "bumppatch": "npm version patch -m \"tag v%s (based on $(git describe))\""
   },
   "repository": "git://github.com/yahoo/mojito-cli.git",

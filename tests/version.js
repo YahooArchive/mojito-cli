@@ -1,6 +1,6 @@
 var test = require('tap').test,
     vers = require('../commands/version'),
-    log = vers.log;
+    log = require('../lib/log');
 
 
 // buffer log msgs instead of outputing them

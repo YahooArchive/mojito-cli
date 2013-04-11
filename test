@@ -1,0 +1,27 @@
+// FIXME find a better way to run all tests, with or without coverage.
+//
+// this script requires all ./tests/*.js files to run tests in a
+// single process for istanbul; however exit code is always 0.
+//
+// tap tests/*.js runs same tests (over-reporting number of tests),
+// but in separate processes, so istanbul can't provide coordinated
+// coverage. tap does exit with non-zero code if there are failures,
+// which is needed for travis.
+
+var fs = require('fs'),
+    resolve = require('path').resolve,
+    testdir = resolve(__dirname, 'tests');
+
+function load(name) {
+    var path;
+    if(name.match(/[.]js$/)) {
+        path = resolve(testdir, name);
+        if(path !== __filename) {
+            require(path); // tests in this file get run
+        }
+    }
+}
+
+fs.readdir(testdir, function onreaddir(err, list) {
+    list.forEach(load);
+});

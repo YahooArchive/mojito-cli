@@ -39,7 +39,7 @@ test('read someapp’s mojito', function(t) {
 
     // extra props for mojito
     t.equal(actual.commandsPath, fromhere('./fixtures/someapp/node_modules/mojito/lib/app/commands'));
-    t.same(actual.commands, cmds);
+    t.same(actual.commands.sort(), cmds.sort());
     t.end();
 });
 
