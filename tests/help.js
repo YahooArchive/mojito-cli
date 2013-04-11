@@ -44,6 +44,24 @@ test('help simple', function(t) {
     help([], {}, getMeta(), cb);
 });
 
+test('help + mojito commands', function(t) {
+    var meta = getMeta();
+
+    meta.mojito = {commands: ['beep', 'boop', 'create', 'make-it-rain']};
+
+    t.plan(5);
+    function cb(err, msg) {
+        t.equals(err, undefined);
+        t.equals(log.record.shift().message, 'Usage: mojito <command> [options]');
+        t.equals(log.record.shift().message, 'whoop whoop');
+        t.equals(log.record.shift().message, 'Available commands: beep, boop, create, help, info, make-it-rain, version');
+        t.equals(log.record.length, 0);
+    }
+
+    reset();
+    help([], {}, meta, cb);
+});
+
 test('help nonesuch', function(t) {
     t.plan(2);
 
@@ -80,7 +98,7 @@ test('help create', function(t) {
 test('help mock jslint', function(t) {
     var meta = {
             mojito: {
-                commands: ['jslint', 'make-it-rain', 'create', 'jslint'],
+                commands: ['jslint', 'beep', 'boop'],
                 commandsPath: resolve(__dirname, 'fixtures/someapp/node_modules/mojito/lib/app/commands')
             }
         };

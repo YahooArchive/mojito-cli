@@ -17,11 +17,19 @@ function usage(description) {
 }
 
 function help(meta) {
-    var bundled = meta.cli.commands,
-        every = meta.mojito ? bundled.concat(meta.mojito.commands) : bundled;
+    var commands = meta.cli.commands;
+
+    if (meta.mojito) {
+        meta.mojito.commands.forEach(function(cmd) {
+            if (commands.indexOf(cmd) === -1) {
+                commands.push(cmd);
+            }
+        });
+        commands.sort();
+    }
 
     usage(meta.cli.description);
-    log.info('Available commands: %s', every.join(', '));
+    log.info('Available commands: %s', commands.join(', '));
 
     if (!meta.mojito) {
         log.info(
