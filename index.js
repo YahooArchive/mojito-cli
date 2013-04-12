@@ -16,6 +16,7 @@ var resolve = require('path').resolve,
     aliases = {h: '--help', v: '--version', d: '--debug'},
     bundled = { // map of package name:require-string
         'create': 'mojito-create',
+        'validate': 'mojito-validate',
         'help': './commands/help',
         'info': './commands/info',
         'version': './commands/version'

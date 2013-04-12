@@ -9,6 +9,7 @@
   "preferGlobal": true,
   "dependencies": {
     "mojito-create": "*",
+    "mojito-validate": "*",
     "npmlog": "0.0.2",
     "nopt": "~2.1.1"
   },
