@@ -32,22 +32,22 @@ function mojitVersion(name) {
     }
 }
 
-function main(args, opts, meta, cb) {
-    var type = args.shift();
+function main(env, cb) {
+    var type = env.args.shift();
 
     switch (type) {
     case undefined:
-        version(meta.cli);
+        version(env.cli);
         break;
     case 'app':
     case 'application':
-        version(meta.app);
-        if (meta.mojito) {
-            version(meta.mojito, '(installed locally)');
+        version(env.app);
+        if (env.mojito) {
+            version(env.mojito, '(installed locally)');
         }
         break;
     case 'mojit':
-        mojitVersion(args.shift());
+        mojitVersion(env.args.shift());
         break;
     default:
         error('Unrecognized parameter: ' + type);

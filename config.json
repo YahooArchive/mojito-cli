@@ -1,0 +1,14 @@
+{
+    "commands": {
+        "create": "mojito-create",
+        "help": "./commands/help",
+        "info": "./commands/info",
+        "version": "./commands/version"
+    },
+    "options": [
+        {"shortName": "d", "hasValue": true,  "longName": "directory"},
+        {"shortName": "h", "hasValue": false, "longName": "help"},
+        {"shortName": "l", "hasValue": true,  "longName": "loglevel"},
+        {"shortName": "v", "hasValue": false, "longName": "version"}
+    ]
+}

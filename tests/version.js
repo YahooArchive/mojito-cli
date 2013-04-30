@@ -6,8 +6,11 @@ var test = require('tap').test,
 // buffer log msgs instead of outputing them
 log.pause();
 
-function getMeta() {
-    return {cli: {name: 'mojito-cli', version: '1.2.3'}};
+function getenv() {
+    return {
+        args: [],
+        cli: {name: 'mojito-cli', version: '1.2.3'}
+    };
 }
 
 function reset() {
@@ -30,13 +33,15 @@ test('version simple', function(t) {
     }
 
     reset();
-    vers([], {}, getMeta(), cb);
+    vers(getenv(), cb);
 });
 
 test('version app', function(t) {
-    var meta = getMeta();
+    var env = getenv();
     
-    meta.app = {
+    env.args = ['app'];
+
+    env.app = {
         name: 'myapp',
         version: '3.4.5',
         description: 'lorem ipsum delor etc',
@@ -45,7 +50,7 @@ test('version app', function(t) {
         }
     };
 
-    meta.mojito = {
+    env.mojito = {
         name: 'mojito',
         version: '0.0.1'
     };
@@ -59,13 +64,15 @@ test('version app', function(t) {
     }
 
     reset();
-    vers(['app'], {}, meta, cb);
+    vers(env, cb);
 });
 
 test('version application', function(t) {
-    var meta = getMeta();
+    var env = getenv();
     
-    meta.app = {
+    env.args = ['application'];
+
+    env.app = {
         name: 'myapp',
         version: '3.4.5',
         description: 'lorem ipsum delor etc',
@@ -74,7 +81,7 @@ test('version application', function(t) {
         }
     };
 
-    meta.mojito = {
+    env.mojito = {
         name: 'mojito',
         version: '0.0.1'
     };
@@ -88,13 +95,15 @@ test('version application', function(t) {
     }
 
     reset();
-    vers(['application'], {}, meta, cb);
+    vers(env, cb);
 });
 
 test('version mojit foo', function(t) {
-    var meta = getMeta();
+    var env = getenv();
+
+    env.args = ['mojit', 'foo'];
     
-    meta.app = {
+    env.app = {
         name: 'myapp',
         version: '3.4.5',
         description: 'lorem ipsum delor etc',
@@ -103,7 +112,7 @@ test('version mojit foo', function(t) {
         }
     };
 
-    meta.mojito = {
+    env.mojito = {
         name: 'mojito',
         version: '0.0.1'
     };
@@ -116,13 +125,15 @@ test('version mojit foo', function(t) {
     }
 
     reset();
-    vers(['mojit', 'foo'], {}, meta, cb);
+    vers(env, cb);
 });
 
 test('version mojit (missing mojit name)', function(t) {
-    var meta = getMeta();
+    var env = getenv();
     
-    meta.app = {
+    env.args = ['mojit'];
+
+    env.app = {
         name: 'myapp',
         version: '3.4.5',
         description: 'lorem ipsum delor etc',
@@ -131,7 +142,7 @@ test('version mojit (missing mojit name)', function(t) {
         }
     };
 
-    meta.mojito = {
+    env.mojito = {
         name: 'mojito',
         version: '0.0.1'
     };
@@ -148,17 +159,21 @@ test('version mojit (missing mojit name)', function(t) {
     }
 
     reset();
-    vers(['mojit'], {}, meta, cb);
+    vers(env, cb);
 });
 
 
 test('version nonesuch', function(t) {    
+    var env = getenv();
+    
+    env.args = ['nonesuch'];
+
     function cb(err, msg) {
         t.equals(err, undefined);
         t.end();
     }
 
     reset();
-    vers(['kthxbai'], {}, getMeta(), cb);
+    vers(env, cb);
 });
 

@@ -31,7 +31,7 @@ test('info simple', function(t) {
     }
 
     reset();
-    info([], null, getMeta(), cb);
+    info(getMeta(), cb);
 });
 
 test('info app, no deps', function(t) {
@@ -59,7 +59,7 @@ test('info app, no deps', function(t) {
     }
 
     reset();
-    info([], null, meta, cb);
+    info(meta, cb);
 });
 
 test('info app, missing description', function(t) {
@@ -86,7 +86,7 @@ test('info app, missing description', function(t) {
     }
 
     reset();
-    info([], null, meta, cb);
+    info(meta, cb);
 });
 
 test('info app, mojito dep', function(t) {
@@ -120,7 +120,7 @@ test('info app, mojito dep', function(t) {
     }
 
     reset();
-    info([], null, meta, cb);
+    info(meta, cb);
 });
 
 test('info app, mojito dep, mojito local', function(t) {
@@ -156,5 +156,5 @@ test('info app, mojito dep, mojito local', function(t) {
     }
 
     reset();
-    info([], null, meta, cb);
+    info(meta, cb);
 });

@@ -9,16 +9,16 @@
 var log = require('../lib/log');
 
 
-function appinfo(meta) {
-    var appdeps = meta.app && meta.app.dependencies,
-        needs_mojito = appdeps && meta.app.dependencies.mojito;
+function appinfo(env) {
+    var appdeps = env.app && env.app.dependencies,
+        needs_mojito = appdeps && env.app.dependencies.mojito;
 
-    if (meta.app && meta.app.name && meta.app.version) {
-        log.info('%s v%s, %s', meta.app.name, meta.app.version,
-            meta.app.description || '(missing description)');
+    if (env.app && env.app.name && env.app.version) {
+        log.info('%s v%s, %s', env.app.name, env.app.version,
+            env.app.description || '(missing description)');
 
-        if (meta.app.dependencies && meta.app.dependencies.mojito) {
-            log.info('%s dependencies: %s', meta.app.name, Object.keys(appdeps).join(', '));
+        if (env.app.dependencies && env.app.dependencies.mojito) {
+            log.info('%s dependencies: %s', env.app.name, Object.keys(appdeps).join(', '));
 
         } else {
             log.warn('Mojito is not listed as a dependency in your package.json. Fix with:');
@@ -28,8 +28,8 @@ function appinfo(meta) {
     }
 
     if (needs_mojito) {
-        if (meta.mojito) {
-            log.info('%s v%s (installed locally).', meta.mojito.name, meta.mojito.version);
+        if (env.mojito) {
+            log.info('%s v%s (installed locally).', env.mojito.name, env.mojito.version);
         } else {
             log.warn('Mojito is not installed locally. Install with:');
             log.warn('    npm install mojito');
@@ -38,10 +38,10 @@ function appinfo(meta) {
     }
 }
 
-function main(args, opts, meta, cb) {
-    log.info('%s v%s', meta.cli.name, meta.cli.version);
+function main(env, cb) {
+    log.info('%s v%s', env.cli.name, env.cli.version);
     log.info('node %s/%s', process.version, process.platform);
-    appinfo(meta);
+    appinfo(env);
     cb();
 }
 

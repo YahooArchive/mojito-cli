@@ -1,12 +1,14 @@
 var test = require('tap').test,
+    resolve = require('path').resolve,
     cli = require('../'),
     log = require('../lib/log');
 
 
 // buffer log msgs instead of outputing them
+//log.level = 'silly';
 log.pause();
 
-function reset(t) {
+function reset() {
     log.record = [];
     log._buffer = [];
 }
@@ -22,68 +24,65 @@ function noCb(t) {
 
 test('index exports', function (t) {
     t.equal('function', typeof cli);
-    t.same(Object.keys(cli), ['getmeta', 'load']);
+    t.same(Object.keys(cli), ['load']);
     t.end();
 });
 
-test('mojito (no subcmd)', function(t) {
-    t.plan(5);
-
-    function cb2(m) {
-        // for some reason, on jenkins this test:
-        // t.equal(m.message, 'No command...', 'err msg emitted');
-        //
-        // fails with the following:
-        //     found:  No command...
-        //     wanted: No command...
-        //     diff:   |
-        //       FOUND:   No command...
-        //       WANTED: No command...
-        //               ^ (at position = 0)
-        t.ok(m.message.match(/No command/), 'err msg emitted');
-        process.nextTick(function() {
-            t.equal(log.record[0], m, 'err msg obj is 1st elem');
-            t.ok(log.record.length > 1, 'plus some other msgs');
-            reset();
-        });
-    }
-
-    log.once('log.error', cb2);
-    reset();
-    t.equals(cli([], '', noCb(t)), 'help');
+test('--debug', function(t) {
+    t.equals(cli(['--debug', 'help'], '', noop), 'help');
+    t.equals(cli(['help', '-d'], '', noop), 'help');
+    t.end();
 });
 
-test('mojito help|--help|-h', function(t) {
-    t.plan(6)
-    t.equals(cli(['help'], '', noCb(t)), 'help');
-    t.equals(cli(['--help'], '', noCb(t)), 'help');
-    t.equals(cli(['-h'], '', noCb(t)), 'help');
+test('load "version"', function(t) {
+    var env = {
+            cli:{
+                commands:{version:'./commands/version'}
+            }
+        },
+        actual = cli.load('version', env);
+    t.equals(typeof actual, 'function');
+    t.equals(typeof actual.usage, 'string');
+    t.ok(actual.usage.match(/^Usage: mojito version /));
+    t.end();
+});
+
+test('load false', function(t) {
+    var env = {cli:{commands:{}}},
+        actual = cli.load('foo', env);
+    t.equals(actual, false);
+    t.end();
+});
+
+test('load fail', function(t) {
+    var meta = {
+            cli:{commands:{}},
+            mojito: {
+                commands: ['foo'],
+                commandsPath: '/bar/baz'
+            }
+        },
+        actual = cli.load('foo', meta);
+    t.equals(actual, false);
+    t.end();
 });
 
 test('mojito help (app cwd)', function(t) {
-    var cwd = __dirname + '/fixtures/someapp';
+    var cwd = resolve(__dirname, 'fixtures/someapp');
 
     function cb(err, msg) {
         t.equal(err, null);
-        t.equal(msg, 'mock usage for mojito/lib/app/commands/jslint.js');
-        t.equal(log.record.shift().level, 'debug');
-        t.equal(log.record.shift().level, 'debug');
-        t.equal(log.record.shift().level, 'debug');
-        t.equal(log.record.shift().level, 'debug');
-        t.equal(log.record.shift().level, 'debug');
-        t.equal(log.record.shift().level, 'debug');
-        t.equal(log.record.shift().level, 'debug');
-        t.equal(log.record.shift().level, 'debug');
-        t.equal(log.record.length, 0);
+        //t.equal(msg, 'mock usage for mojito/lib/app/commands/jslint.js');
         reset();
-        t.end();
     }
+
     reset();
-    t.equals(cli(['help', 'jslint'], cwd, cb), 'help');
+    t.plan(1);
+    cli(['help', 'jslint'], cwd, cb);
 });
 
 test('exec legacy cmd', function(t) {
-    var cwd = __dirname + '/fixtures/someapp';
+    var cwd = resolve(__dirname, 'fixtures/someapp');
 
     function cb(err, args, opts) {
         t.equals(err, null);
@@ -93,12 +92,6 @@ test('exec legacy cmd', function(t) {
 
     reset();
     cli(['jslint'], cwd, cb);
-});
-
-test('--debug', function(t) {
-    t.equals(cli(['--debug', 'help'], '', noop), 'help');
-    t.equals(cli(['help', '-d'], '', noop), 'help');
-    t.end();
 });
 
 test('mojito --version', function(t) {
@@ -158,9 +151,22 @@ test('mojito info', function(t) {
     t.equals(cli(['info'], '', cb), 'info');
 });
 
-test('command takes priority over atl cmd flag', function(t) {
+test('command takes priority over alt cmd flag', function(t) {
     t.equals(cli(['--version', 'help'], '', noop), 'help');
     t.end();
+});
+
+test('no args', function(t) {
+    t.plan(3);
+
+    function cb(err, msg) {
+        t.equals(err, undefined, 'err undefined');
+        t.ok(log.record.length > 3);
+        reset();
+    }
+
+    reset();
+    t.equals(cli([], '', cb), 'help');
 });
 
 test('nonesuch', function(t) {
@@ -168,33 +174,8 @@ test('nonesuch', function(t) {
 
     function cb(err, msg) {
         t.equals(err, 'Unable to invoke command nonesuch');
+        reset();
     }
 
     t.equals(cli(['nonesuch'], '', cb), 'nonesuch');
-});
-
-test('load "version"', function(t) {
-    var actual = cli.load('version', {});
-    t.equals(typeof actual, 'function');
-    t.equals(typeof actual.usage, 'string');
-    t.ok(actual.usage.match(/^Usage: mojito version /));
-    t.end();
-});
-
-test('load false', function(t) {
-    var actual = cli.load('foo', {});
-    t.equals(actual, false);
-    t.end();
-});
-
-test('load fail', function(t) {
-    var meta = {
-            mojito: {
-                commands: ['foo'],
-                commandsPath: '/bar/baz'
-            }
-        },
-        actual = cli.load('foo', meta);
-    t.equals(actual, false);
-    t.end();
 });

@@ -1,19 +1,27 @@
 var test = require('tap').test,
     help = require('../commands/help'),
     log = require('../lib/log'),
-
     resolve = require('path').resolve;
 
 
 // buffer log msgs instead of outputing them
 log.pause();
 
-function getMeta() {
+function getEnv() {
     return {
+        command: 'help',
+        args: [],
+        opts: {},
         cli: {
             name: 'mojito-cli',
             version: '1.2.3',
-            commands: ['create', 'help', 'info', 'version', 'make-it-rain'],
+            commands: {
+                'create': 'mojito-create',
+                'help': 1,
+                'info': 1,
+                'version': './commands/version',
+                'make-it-rain': 1
+            },
             description: 'whoop whoop'
         }
     };
@@ -41,15 +49,14 @@ test('help simple', function(t) {
     }
 
     reset();
-    help([], {}, getMeta(), cb);
+    help(getEnv(), cb);
 });
 
 test('help + mojito commands', function(t) {
-    var meta = getMeta();
+    var env = getEnv();
 
-    meta.mojito = {commands: ['beep', 'boop', 'create', 'make-it-rain']};
+    env.mojito = {commands: ['beep', 'boop', 'create', 'make-it-rain']};
 
-    t.plan(5);
     function cb(err, msg) {
         t.equals(err, undefined);
         t.equals(log.record.shift().message, 'Usage: mojito <command> [options]');
@@ -59,44 +66,56 @@ test('help + mojito commands', function(t) {
     }
 
     reset();
-    help([], {}, meta, cb);
+    t.plan(5);
+    help(env, cb);
 });
 
 test('help nonesuch', function(t) {
-    t.plan(2);
+    var env = getEnv();
+    env.args = ['nonesuch'];
 
     function cb(err, msg) {
-        t.equals(err, 'No help available for command nonesuch');
-        t.equals(msg, undefined);
+        t.equals(err, 'No help available for command nonesuch', 'haz err');
+        t.equals(msg, undefined, 'no msg');
     }
 
-    help(['nonesuch'], {}, getMeta(), cb);
+    reset();
+    t.plan(2);
+    help(env, cb);
 });
 
 test('help version', function(t) {
-    t.plan(2);
+    var env = getEnv();
+    env.args = ['version'];
 
     function cb(err, msg) {
         t.equals(err, null);
         t.ok(msg.match(/^Usage: mojito version/));
     }
 
-    help(['version'], {}, {}, cb);
+    reset();
+    t.plan(2);
+    help(env, cb);
 });
 
 test('help create', function(t) {
-    t.plan(2);
+    var env = getEnv();
+    env.args = ['create'];
 
     function cb(err, msg) {
         t.equal(err, null);
         t.ok(~msg.indexOf('mojito create'));
     }
 
-    help(['create'], {}, {}, cb);
+    reset();
+    t.plan(2);
+    help(env, cb);
 });
 
 test('help mock jslint', function(t) {
-    var meta = {
+    var env = {
+            args: ['jslint'],
+            cli: {commands:{}},
             mojito: {
                 commands: ['jslint', 'beep', 'boop'],
                 commandsPath: resolve(__dirname, 'fixtures/someapp/node_modules/mojito/lib/app/commands')
@@ -111,6 +130,5 @@ test('help mock jslint', function(t) {
     }
 
     reset();
-    help(['jslint'], {}, meta, cb);
+    help(env, cb);
 });
-

@@ -6,8 +6,7 @@
 /*jshint node:true */
 'use strict';
 
-var resolve = require('path').resolve,
-    load = require('../').load,
+var load = require('../').load,
     log = require('../lib/log');
 
 
@@ -16,22 +15,22 @@ function usage(description) {
     log.info(description);
 }
 
-function help(meta) {
-    var commands = meta.cli.commands;
+function help(env) {
+    var commands = Object.keys(env.cli.commands);
 
-    if (meta.mojito) {
-        meta.mojito.commands.forEach(function(cmd) {
+    if (env.mojito) {
+        env.mojito.commands.forEach(function(cmd) {
             if (commands.indexOf(cmd) === -1) {
-                commands.push(cmd);
+                commands.push(cmd); // uniq commands
             }
         });
         commands.sort();
     }
 
-    usage(meta.cli.description);
+    usage(env.cli.description);
     log.info('Available commands: %s', commands.join(', '));
 
-    if (!meta.mojito) {
+    if (!env.mojito) {
         log.info(
             'Additional commands are available from within an application ' +
             'directory that has\nmojito installed.'
@@ -39,21 +38,21 @@ function help(meta) {
     }
 }
 
-function main(args, opts, meta, cb) {
-    var cmd = args.shift() || '',
+function main(env, cb) {
+    var cmd = env.args.shift() || '',
         mod;
 
     if (!cmd) {
-        help(meta);
+        help(env);
         cb();
 
     } else {
-        mod = load(cmd, meta);
+        mod = load(cmd, env);
         if (mod && mod.usage) {
             cb(null, mod.usage);
 
         } else {
-            help(meta);
+            help(env);
             cb('No help available for command ' + cmd);
         }
     }
