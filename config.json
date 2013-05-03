@@ -1,5 +1,6 @@
 {
     "commands": {
+        "build": "mojito-build",
         "create": "mojito-create",
         "help": "./commands/help",
         "info": "./commands/info",

@@ -1,6 +1,6 @@
 {
   "name": "mojito-cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The mojito-cli package provides command line helpers for Mojito developers.",
   "bin": {
     "mojito": "bin/mojito"
@@ -8,6 +8,7 @@
   "main": "index.js",
   "preferGlobal": true,
   "dependencies": {
+    "mojito-build": "~0.0.0",
     "mojito-create": "~0.0.2",
     "npmlog": "0.0.2",
     "nopt": "~2.1.1"
