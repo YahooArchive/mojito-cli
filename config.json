@@ -10,6 +10,7 @@
         {"shortName": "d", "hasValue": true,  "longName": "directory"},
         {"shortName": "h", "hasValue": false, "longName": "help"},
         {"shortName": "l", "hasValue": true,  "longName": "loglevel"},
+        {"shortName": "m", "hasValue": true,  "longName": "lib"},
         {"shortName": "v", "hasValue": false, "longName": "version"}
     ]
 }

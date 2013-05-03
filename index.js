@@ -79,7 +79,7 @@ function main(argv, cwd, cb) {
     env.cwd = cwd;
     env.cli = cli;
     env.app = (cwd !== __dirname) && readpkg(cwd);
-    env.mojito = env.app && readpkg.mojito(cwd);
+    env.mojito = env.app && readpkg.mojito(cwd, env.opts.lib);
     log.silly('env:', env);
 
     exec(env, cb);
