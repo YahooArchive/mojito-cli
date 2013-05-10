@@ -5,7 +5,7 @@
   "bin": {
     "mojito": "bin/mojito"
   },
-  "main": "index.js",
+  "main": "cli.js",
   "preferGlobal": true,
   "dependencies": {
     "mojito-build": "~0.0.0",
@@ -24,6 +24,7 @@
     "lint": "jshint {.,lib,commands}/*.js",
     "test": "node tests",
     "cover": "istanbul cover --dir artifacts/coverage tests",
+    "clean": "git clean -dfx {.,tests}/artifacts",
     "preinstall": "scripts/preinstall.sh"
   },
   "repository": "git://github.com/yahoo/mojito-cli.git",

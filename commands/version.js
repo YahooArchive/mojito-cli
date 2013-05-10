@@ -7,7 +7,7 @@
 
 var join = require('path').join,
     log = require('../lib/log'),
-    readpkg = require('../lib/readpkg');
+    getenv = require('../lib/getenv');
 
 
 function error(msg) {
@@ -25,7 +25,7 @@ function version(meta, msg) {
 
 function mojitVersion(name) {
     if (name) {
-        version(readpkg(join('./mojits', name)));
+        version(getenv(join('./mojits', name)));
     } else {
         error('Please specify a mojit name.');
     }

@@ -1,6 +1,6 @@
 var test = require('tap').test,
     resolve = require('path').resolve,
-    cli = require('../'),
+    cli = require('../cli'),
     log = require('../lib/log');
 
 
