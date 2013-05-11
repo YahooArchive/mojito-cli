@@ -69,11 +69,11 @@ function exec(env, cb) {
     getopts.redux(env, mod.options);
 
     if (mod && mod.hasOwnProperty('run')) {
-        log.debug('runnning legacy mojito command %s', env.command);
+        log.debug('invoking legacy command %s', env.command);
         mod.run(env.args, env.opts, cb);
 
     } else if ('function' === typeof mod) {
-        log.debug('getting bundled command %s', env.command);
+        log.debug('invoking command %s', env.command);
         mod(env, cb);
 
     } else {
@@ -106,7 +106,7 @@ function main(argv, cwd, cb) {
     env.cwd = cwd;
     env.cli = cli;
     env.app = (cwd !== __dirname) && getenv(cwd);
-    env.mojito = env.app && getenv.mojito(cwd, env.opts.lib);
+    env.mojito = (env.app || env.opts.lib) && getenv.mojito(cwd, env.opts.lib);
     log.silly('env:', env);
 
     exec(env, cb);
