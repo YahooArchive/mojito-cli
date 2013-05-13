@@ -17,7 +17,11 @@ function tryRequire(str) {
         mod = require(str);
         log.debug('required %s', str);
     } catch(err) {
-        log.debug('unable to require %s', str);
+        if ('MODULE_NOT_FOUND' === err.code) {
+            log.debug('module %s was not found', str);
+        } else {
+            log.debug('module error', err);
+        }
     }
     return mod;
 }
