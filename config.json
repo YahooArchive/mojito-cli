@@ -1,7 +1,8 @@
 {
     "commands": {
-        "build": "mojito-build",
-        "create": "mojito-create",
+        "build": "mojito-cli-build",
+        "create": "mojito-cli-create",
+        "doc": "mojito-cli-doc",
         "help": "./commands/help",
         "info": "./commands/info",
         "version": "./commands/version"

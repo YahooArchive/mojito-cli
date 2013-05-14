@@ -29,7 +29,7 @@ test('getenv.cli()', function(t) {
     t.equal(actual.version, expected.version);
     t.equal(actual.description, expected.description);
     t.same(actual.dependencies, expected.dependencies);
-    t.equal(actual.commands.create, 'mojito-create');
+    t.equal(actual.commands.create, 'mojito-cli-create');
     t.equal(actual.commands.help, './commands/help');
     t.equal(actual.commands.version, './commands/version');
     t.end();

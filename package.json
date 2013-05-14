@@ -8,8 +8,9 @@
   "main": "cli.js",
   "preferGlobal": true,
   "dependencies": {
-    "mojito-build": "~0.0.0",
-    "mojito-create": "~0.0.2",
+    "mojito-cli-build": "~0.0.1",
+    "mojito-cli-create": "~0.0.4",
+    "mojito-cli-doc": "~0.0.1",
     "npmlog": "0.0.2",
     "nopt": "~2.1.1"
   },

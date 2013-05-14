@@ -64,9 +64,24 @@ To show the version for a mojit, run the following from the application director
 
     % mojito version mojit <mojit-name>
 
-### [create](http://github.com/yahoo/mojito-create)
+### [create](http://github.com/yahoo/mojito-cli-create)
 
-    % mojito create <type> <subtype> <name>
+    % mojito create [options] <type> <subtype> <name>
+
+### [build](http://github.com/yahoo/mojito-cli-build)
+
+    % mojito build [options] html5app [dest]
+
+### [doc](http://github.com/yahoo/mojito-cli-doc)
+
+    % mojito doc [options] <app|mojit|mojito> [dest]
+
+### [jslint](http://github.com/yahoo/mojito-cli-jslint)
+
+### [start](http://github.com/yahoo/mojito-cli-start)
+
+### [test](http://github.com/yahoo/mojito-cli-test)
+
 
 ### other...
 
