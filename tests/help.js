@@ -16,7 +16,7 @@ function getEnv() {
             name: 'mojito-cli',
             version: '1.2.3',
             commands: {
-                'create': 'mojito-create',
+                'create': 'mojito-cli-create',
                 'help': 1,
                 'info': 1,
                 'version': './commands/version',
