@@ -1,11 +1,11 @@
 var test = require('tap').test,
     resolve = require('path').resolve,
-    cli = require('../cli'),
-    log = require('../lib/log');
+    log = require('../lib/log'),
+
+    fn = require('../cli');
 
 
 // buffer log msgs instead of outputing them
-//log.level = 'silly';
 log.pause();
 
 function reset() {
@@ -23,47 +23,14 @@ function noCb(t) {
 }
 
 test('index exports', function (t) {
-    t.equal('function', typeof cli);
-    t.same(Object.keys(cli), ['load']);
+    t.equal('function', typeof fn);
+    t.same(Object.keys(fn), ['load']);
     t.end();
 });
 
 test('--debug', function(t) {
-    t.equals(cli(['--debug', 'help'], '', noop), 'help');
-    t.equals(cli(['help', '-d'], '', noop), 'help');
-    t.end();
-});
-
-test('load "version"', function(t) {
-    var env = {
-            cli:{
-                commands:{version:'./commands/version'}
-            }
-        },
-        actual = cli.load('version', env);
-    t.equals(typeof actual, 'function');
-    t.equals(typeof actual.usage, 'string');
-    t.ok(actual.usage.match(/^Usage: mojito version /));
-    t.end();
-});
-
-test('load false', function(t) {
-    var env = {cli:{commands:{}}},
-        actual = cli.load('foo', env);
-    t.equals(actual, false);
-    t.end();
-});
-
-test('load fail', function(t) {
-    var meta = {
-            cli:{commands:{}},
-            mojito: {
-                commands: ['foo'],
-                commandsPath: '/bar/baz'
-            }
-        },
-        actual = cli.load('foo', meta);
-    t.equals(actual, false);
+    t.equals(fn(['--debug', 'help'], '', noop), 'help');
+    t.equals(fn(['help', '-d'], '', noop), 'help');
     t.end();
 });
 
@@ -72,13 +39,27 @@ test('mojito help (app cwd)', function(t) {
 
     function cb(err, msg) {
         t.equal(err, null);
-        //t.equal(msg, 'mock usage for mojito/lib/app/commands/jslint.js');
+        t.equal(msg, 'mock usage for mojito/lib/app/commands/jslint.js');
         reset();
     }
 
     reset();
-    t.plan(1);
-    cli(['help', 'jslint'], cwd, cb);
+    t.plan(2);
+    fn(['help', 'jslint'], cwd, cb);
+});
+
+test('mojito help --lib fixtures/…/mojito', function(t) {
+    var lib = resolve(__dirname, 'fixtures', 'someapp', 'node_modules', 'mojito');
+
+    function cb(err, msg) {
+        t.equal(err, null);
+        t.equal(msg, 'mock usage for mojito/lib/app/commands/jslint.js');
+        reset();
+    }
+
+    reset();
+    t.plan(2);
+    fn(['help', 'jslint', '--lib', lib], '.', cb);
 });
 
 test('exec legacy cmd', function(t) {
@@ -91,7 +72,7 @@ test('exec legacy cmd', function(t) {
     }
 
     reset();
-    cli(['jslint'], cwd, cb);
+    fn(['jslint'], cwd, cb);
 });
 
 test('mojito --version', function(t) {
@@ -102,7 +83,7 @@ test('mojito --version', function(t) {
         t.equals(msg, undefined);
     }
 
-    t.equals(cli(['--version'], '', cb), 'version');
+    t.equals(fn(['--version'], '', cb), 'version');
 });
 
 test('mojito version', function(t) {
@@ -113,8 +94,8 @@ test('mojito version', function(t) {
         t.equals(msg, undefined);
     }
 
-    t.equals(cli(['version'], '', cb), 'version');
-    //t.equals(cli(['--version'], null, cb), 'version');
+    t.equals(fn(['version'], '', cb), 'version');
+    //t.equals(fn(['--version'], null, cb), 'version');
 });
 
 test('mojito version app|application', function(t) {
@@ -125,8 +106,8 @@ test('mojito version app|application', function(t) {
         t.equals(msg, undefined);
     }
 
-    t.equals(cli(['version', 'app'], '', cb), 'version');
-    t.equals(cli(['version', 'application'], '', cb), 'version');
+    t.equals(fn(['version', 'app'], '', cb), 'version');
+    t.equals(fn(['version', 'application'], '', cb), 'version');
 });
 
 test('mojito version mojit', function(t) {
@@ -137,7 +118,7 @@ test('mojito version mojit', function(t) {
         t.equals(msg, undefined);
     }
 
-    t.equals(cli(['version', 'mojit'], '', cb), 'version');
+    t.equals(fn(['version', 'mojit'], '', cb), 'version');
 });
 
 test('mojito info', function(t) {
@@ -148,15 +129,15 @@ test('mojito info', function(t) {
         t.equals(msg, undefined);
     }
 
-    t.equals(cli(['info'], '', cb), 'info');
+    t.equals(fn(['info'], '', cb), 'info');
 });
 
 test('command takes priority over alt cmd flag', function(t) {
-    t.equals(cli(['--version', 'help'], '', noop), 'help');
+    t.equals(fn(['--version', 'help'], '', noop), 'help');
     t.end();
 });
 
-test('no args', function(t) {
+test('mojito (no args)', function(t) {
     t.plan(3);
 
     function cb(err, msg) {
@@ -166,10 +147,10 @@ test('no args', function(t) {
     }
 
     reset();
-    t.equals(cli([], '', cb), 'help');
+    t.equals(fn([], '', cb), 'help');
 });
 
-test('nonesuch', function(t) {
+test('mojito nonesuch', function(t) {
     t.plan(2);
 
     function cb(err, msg) {
@@ -177,5 +158,5 @@ test('nonesuch', function(t) {
         reset();
     }
 
-    t.equals(cli(['nonesuch'], '', cb), 'nonesuch');
+    t.equals(fn(['nonesuch'], '', cb), 'nonesuch');
 });

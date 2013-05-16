@@ -58,8 +58,10 @@ function load(cmd, env) {
 /**
  * invoke subcommand with env metadata and callback
  * @param {object} env
+ *   @param {string} command, the first non-option cli arg (i.e. "create")
  *   @param {array} args command line arguments (see getopts.js)
  *   @param {object} opts command line options (see getopts.js)
+ *   @param {array} orig the argv array originaly passed to index.js
  *   @param {string} cwd absolute path to current working directory
  *   @param {object} cli metadata (see getenv.js:cli())
  *   @param {object|false} app metadata (see getenv.js:read())
@@ -94,7 +96,7 @@ function exec(env, cb) {
  */
 function main(argv, cwd, cb) {
     var cli = getenv.cli(__dirname),
-        env = getopts(argv, cli.options);
+        env = getopts(argv, cli.options); // {command:"…", args:{…}, opts:{…}}
 
     if (env.opts.loglevel) {
         log.level = env.opts.loglevel;
