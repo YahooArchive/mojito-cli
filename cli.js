@@ -74,6 +74,9 @@ function exec(env, cb) {
     // re-parse command line arguments; may modify env.args & env.opts
     getopts.redux(env, mod.options);
 
+    // display with --log silly, too verbose for --debug
+    log.silly('env:', env);
+
     if (mod && mod.hasOwnProperty('run')) {
         log.debug('invoking legacy command %s', env.command);
         mod.run(env.args, env.opts, cb);
@@ -96,7 +99,8 @@ function exec(env, cb) {
  */
 function main(argv, cwd, cb) {
     var cli = getenv.cli(__dirname),
-        env = getopts(argv, cli.options); // {command:"…", args:{…}, opts:{…}}
+        env = getopts(argv, cli.options), // {command:"…", args:{…}, opts:{…}}
+        lib = env.opts.libmojito; // alternate path to mojito library
 
     if (env.opts.loglevel) {
         log.level = env.opts.loglevel;
@@ -112,8 +116,7 @@ function main(argv, cwd, cb) {
     env.cwd = cwd;
     env.cli = cli;
     env.app = (cwd !== __dirname) && getenv(cwd);
-    env.mojito = (env.app || env.opts.lib) && getenv.mojito(cwd, env.opts.lib);
-    log.silly('env:', env);
+    env.mojito = (env.app || lib) && getenv.mojito(cwd, lib);
 
     exec(env, cb);
     return env.command;

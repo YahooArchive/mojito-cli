@@ -21,6 +21,45 @@ test('no args, no configs', function(t) {
     t.end();
 });
 
+test('options speify an array of strings', function(t) {
+    var optcfg = [
+            {hasValue: true, longName: 'loglevel'},
+            {hasValue: [String, Array],  longName: 'item'}
+        ],
+
+        argv = ['foo', '--item', 'aa', '--item', 'bb', '--item', 'cc'],
+
+        expected = {
+            command: 'foo',
+            args: [],
+            opts: {item:['aa', 'bb', 'cc']},
+            orig: argv
+        };
+
+    t.same(fn(argv, optcfg), expected);
+    t.end();
+});
+
+
+test('options specify an array of numbers or strings', function(t) {
+    var optcfg = [
+            {hasValue: true, longName: 'loglevel'},
+            {hasValue: [Number, String, Array],  longName: 'item'}
+        ],
+
+        argv = ['foo', '--item', 'aa', '--item', '22', '--item', 'cc'],
+
+        expected = {
+            command: 'foo',
+            args: [],
+            opts: {item:['aa', 22, 'cc']},
+            orig: argv
+        };
+
+    t.same(fn(argv, optcfg), expected);
+    t.end();
+});
+
 test('help|--help|-h', function(t) {
     var expected = 'help';
 

@@ -109,17 +109,19 @@ The port number specified in the command above overrides the port number in the 
 
 ### test
 
-To run unit tests for an application:
+To run unit tests for a mojito application:
 
-    %  mojito test app <application-path>
+    %  mojito test app
 
 To run unit tests for a specific mojit:
 
-    % mojito test mojit <mojit-path> [<mojit-module>]
+    % mojito test mojit <mojit-name>
 
-If a mojit module (i.e., the YUI module for a portion of the mojit) is specified, only the tests for that module will be run. Otherwise all tests for the mojit will be run.
+Or:
 
-<!-- See [mojito-cli-test](http://github.com/yahoo/mojito-cli-test) -->
+    % mojito test mojit <mojit-path>
+
+See [mojito-cli-test](http://github.com/yahoo/mojito-cli-test)
 
 ### other...
 
