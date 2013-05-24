@@ -21,7 +21,7 @@ test('no args, no configs', function(t) {
     t.end();
 });
 
-test('options speify an array of strings', function(t) {
+test('options to specify an array of strings', function(t) {
     var optcfg = [
             {hasValue: true, longName: 'loglevel'},
             {hasValue: [String, Array],  longName: 'item'}
@@ -40,6 +40,24 @@ test('options speify an array of strings', function(t) {
     t.end();
 });
 
+test('array option not there if nothing specified', function(t) {
+    var optcfg = [
+            {hasValue: true, longName: 'loglevel'},
+            {hasValue: [String, Array],  longName: 'item'}
+        ],
+
+        argv = [],
+
+        expected = {
+            command: '',
+            args: [],
+            opts: {},
+            orig: argv
+        };
+
+    t.same(fn(argv, optcfg), expected);
+    t.end();
+});
 
 test('options specify an array of numbers or strings', function(t) {
     var optcfg = [
