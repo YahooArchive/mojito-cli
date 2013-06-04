@@ -73,6 +73,7 @@ function exec(env, cb) {
 
     // re-parse command line arguments; may modify env.args & env.opts
     getopts.redux(env, mod.options);
+    log.error('env:', env);
 
     // display with --log silly, too verbose for --debug
     log.silly('env:', env);

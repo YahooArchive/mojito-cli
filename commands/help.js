@@ -6,16 +6,13 @@
 'use strict';
 
 var load = require('../').load,
-    log = require('../lib/log');
+    log = require('../lib/log'),
+    EOL = require('os').EOL;
 
-
-function usage(description) {
-    log.info('Usage: mojito <command> [options]');
-    log.info(description);
-}
 
 function help(env) {
-    var commands = Object.keys(env.cli.commands);
+    var commands = Object.keys(env.cli.commands),
+        out = ['Usage: mojito <command> [options]', env.cli.description];
 
     if (env.mojito) {
         env.mojito.commands.forEach(function(cmd) {
@@ -26,24 +23,25 @@ function help(env) {
         commands.sort();
     }
 
-    usage(env.cli.description);
-    log.info('Available commands: %s', commands.join(', '));
+    out.push('Available commands: ' + commands.join(', '));
 
     if (!env.mojito) {
-        log.info(
-            'Additional commands are available from within an application ' +
-            'directory that has\nmojito installed.'
+        out.push(
+            'Additional commands are available from within an application directory that',
+            'has mojito installed.'
         );
     }
+
+    return out.join(EOL);
 }
 
 function main(env, cb) {
     var cmd = env.args.shift() || '',
-        mod;
+        mod,
+        out = [];
 
     if (!cmd) {
-        help(env);
-        cb();
+        cb(null, help(env));
 
     } else {
         mod = load(cmd, env);
