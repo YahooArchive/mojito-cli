@@ -22,6 +22,9 @@ function getEnv(args, opts) {
                 'version': './commands/version',
                 'make-it-rain': 1
             },
+            aliases: {
+            	"docs": "doc"
+            },
             description: 'whoop whoop'
         }
     };
@@ -98,7 +101,7 @@ test('help create', function(t) {
 test('help mock jslint', function(t) {
     var env = {
             args: ['gv'],
-            cli: {commands:{}},
+            cli: {commands:{}, aliases:{}},
             mojito: {
                 commands: ['gv', 'beep', 'boop'],
                 commandsPath: resolve(__dirname, 'fixtures/someapp/node_modules/mojito/lib/app/commands')

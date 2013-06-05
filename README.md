@@ -87,7 +87,7 @@ See [mojito-cli-build](http://github.com/yahoo/mojito-cli-build) for more inform
 
 To generate API documentation using [yuidocjs](https://github.com/yui/yuidoc):
 
-    $ mojito doc [options] <app|mojit|mojito> [dest]
+    $ mojito doc [options] <app|mojit|mojito> [name]
 
 See also [mojito-cli-doc](http://github.com/yahoo/mojito-cli-doc).
 
@@ -97,7 +97,7 @@ To find common coding pitfalls with static analysis using [jslint](https://githu
 
     $ mojito jslint [app|mojit] <path>
 
-<!-- See [mojito-cli-jslint](http://github.com/yahoo/mojito-cli-jslint). -->
+See [mojito-cli-jslint](http://github.com/yahoo/mojito-cli-jslint).
 
 ### start
 
@@ -110,7 +110,7 @@ configuration file, `application.json`. The default port number is 8666.
 See [Specifying Context](http://developer.yahoo.com/cocktails/mojito/docs/reference/mojito_cmdline.html#mj-cmdline-context) 
 to learn how to use the `--context` option.
 
-<!-- See [mojito-cli-start](http://github.com/yahoo/mojito-cli-start) -->
+See [mojito-cli-start](http://github.com/yahoo/mojito-cli-start).
 
 ### test
 
@@ -147,8 +147,7 @@ http://developer.yahoo.com/forum/Yahoo-Mojito
 Licensing and Contributions
 ---------------------------
 
-`mojito-cli` is licensed under a BSD license (see LICENSE.txt). To contribute to the Mojito project, 
-please see [Contributing](https://github.com/yahoo/mojito/wiki/Contributing-Code-to-Mojito).
+This software is free to use under the Yahoo! Inc. BSD license. See LICENSE.txt. To contribute to the Mojito project, please see [Contributing](https://github.com/yahoo/mojito/wiki/Contributing-Code-to-Mojito).
 
 The Mojito project is a [meritocratic, consensus-based community project](https://github.com/yahoo/mojito/wiki/Governance-Model), 
 which allows anyone to contribute and gain additional responsibilities.

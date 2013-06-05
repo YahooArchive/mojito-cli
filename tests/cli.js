@@ -31,7 +31,31 @@ test('--debug', function(t) {
     t.end();
 });
 
-test('mojito help (app cwd)', function(t) {
+test('mojito docs // alias for `doc`', function(t) {
+    var cwd = resolve(__dirname, 'fixtures/someapp');
+
+    function cb(err, msg) {
+        t.equal(err, null);
+        t.equal(msg.slice(0,4), 'Done');
+    }
+
+    t.plan(2);
+    fn(['docs', 'app', 'alias-test'], cwd, cb);
+});
+
+test('mojito help docs // alias for `doc`', function(t) {
+    var cwd = resolve(__dirname, 'fixtures/someapp');
+
+    function cb(err, msg) {
+        t.equal(err, null);
+        t.equal(msg.slice(0, 17), 'Usage: mojito doc');
+    }
+
+    t.plan(2);
+    fn(['help', 'docs'], cwd, cb);
+});
+
+test('mojito help jslint (app cwd)', function(t) {
     var cwd = resolve(__dirname, 'fixtures/someapp');
 
     function cb(err, msg) {

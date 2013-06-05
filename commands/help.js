@@ -42,16 +42,21 @@ function main(env, cb) {
 
     if (!cmd) {
         cb(null, help(env));
+        return;
+    }
+
+    // apply command alias, i.e. "docs" -> "doc"
+    if (!env.cli.commands[cmd] && env.cli.aliases[cmd]) {
+        cmd = env.cli.aliases[cmd];
+    }
+
+    mod = load(cmd, env);
+    if (mod && mod.usage) {
+        cb(null, mod.usage);
 
     } else {
-        mod = load(cmd, env);
-        if (mod && mod.usage) {
-            cb(null, mod.usage);
-
-        } else {
-            help(env);
-            cb('No help available for command ' + cmd);
-        }
+        help(env);
+        cb('No help available for command ' + cmd);
     }
 }
 

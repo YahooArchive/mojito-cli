@@ -9,6 +9,9 @@
         "test": "mojito-cli-test",
         "version": "./commands/version"
     },
+    "aliases": {
+    	"docs": "doc"
+    },
     "options": [
         {"shortName": "d", "hasValue": true,  "longName": "directory"},
         {"shortName": "h", "hasValue": false, "longName": "help"},
