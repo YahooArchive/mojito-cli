@@ -5,13 +5,18 @@
         "doc": "mojito-cli-doc",
         "help": "./commands/help",
         "info": "./commands/info",
+        "jslint": "mojito-cli-jslint",
+        "test": "mojito-cli-test",
         "version": "./commands/version"
+    },
+    "aliases": {
+    	"docs": "doc"
     },
     "options": [
         {"shortName": "d", "hasValue": true,  "longName": "directory"},
         {"shortName": "h", "hasValue": false, "longName": "help"},
         {"shortName": "l", "hasValue": true,  "longName": "loglevel"},
-        {"shortName": "m", "hasValue": true,  "longName": "lib"},
-        {"shortName": "v", "hasValue": false, "longName": "version"}
+        {"hasValue": true, "longName": "libmojito"},
+        {"hasValue": false, "longName": "version"}
     ]
 }

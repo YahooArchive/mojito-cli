@@ -1,45 +1,36 @@
 var test = require('tap').test,
-    vers = require('../commands/version'),
-    log = require('../lib/log');
+    log = require('../lib/log'),
+    fn = require('../commands/version');
 
 
 // buffer log msgs instead of outputing them
 log.pause();
 
-function getenv() {
+function getenv(args) {
     return {
-        args: [],
+        args: args || [],
         cli: {name: 'mojito-cli', version: '1.2.3'}
     };
 }
 
-function reset() {
-    log.record = [];
-    log._buffer = [];
-}
-
 test('version exports', function(t) {
-    t.equal('function', typeof vers);
-    t.equal('string', typeof vers.usage);
+    t.equal('function', typeof fn);
+    t.equal('string', typeof fn.usage);
     t.end();
 });
 
 test('version simple', function(t) {
     function cb(err, msg) {
-        t.equals(err, undefined);
-        t.ok(~log.record.shift().message.indexOf('mojito-cli v1.2.3 '));
-        t.equals(log.record.length, 0);
-        t.end();
+        t.equals(err, null);
+        t.equals(msg, 'mojito-cli v1.2.3 ');
     }
 
-    reset();
-    vers(getenv(), cb);
+    t.plan(2);
+    fn(getenv(), cb);
 });
 
 test('version app', function(t) {
-    var env = getenv();
-    
-    env.args = ['app'];
+    var env = getenv(['app']);
 
     env.app = {
         name: 'myapp',
@@ -52,19 +43,17 @@ test('version app', function(t) {
 
     env.mojito = {
         name: 'mojito',
-        version: '0.0.1'
+        version: '0.0.1',
+        path: 'boo/yah/'
     };
 
     function cb(err, msg) {
-        t.equals(err, undefined);
-        t.ok(~log.record.shift().message.indexOf('myapp v3.4.5 '));
-        t.ok(~log.record.shift().message.indexOf('mojito v0.0.1 (installed locally)'));
-        t.equals(log.record.length, 0);
-        t.end();
+        t.equals(err, null);
+        t.equals(msg.trim(), 'myapp v3.4.5 \nmojito v0.0.1 at boo/yah/');
     }
 
-    reset();
-    vers(env, cb);
+    t.plan(2);
+    fn(env, cb);
 });
 
 test('version application', function(t) {
@@ -81,27 +70,19 @@ test('version application', function(t) {
         }
     };
 
-    env.mojito = {
-        name: 'mojito',
-        version: '0.0.1'
-    };
+    env.mojito = false; // variation for coverage
 
     function cb(err, msg) {
-        t.equals(err, undefined);
-        t.ok(~log.record.shift().message.indexOf('myapp v3.4.5 '));
-        t.ok(~log.record.shift().message.indexOf('mojito v0.0.1 (installed locally)'));
-        t.equals(log.record.length, 0);
-        t.end();
+        t.equals(err, null);
+        t.equals(msg, 'myapp v3.4.5 ');
     }
 
-    reset();
-    vers(env, cb);
+    t.plan(2);
+    fn(env, cb);
 });
 
 test('version mojit foo', function(t) {
-    var env = getenv();
-
-    env.args = ['mojit', 'foo'];
+    var env = getenv(['mojit', 'foo']);
     
     env.app = {
         name: 'myapp',
@@ -114,24 +95,21 @@ test('version mojit foo', function(t) {
 
     env.mojito = {
         name: 'mojito',
-        version: '0.0.1'
+        version: '0.0.1',
+        path: '/beep/boop/boppu'
     };
 
     function cb(err, msg) {
-        t.ok(~log.record.shift().message.indexOf('no package.json found at mojits/foo'));
-        t.ok(~log.record.shift().message.indexOf('Missing package.json.'));
-        t.ok(~log.record.shift().message.indexOf('Usage: mojito version'));
-        t.end();
+        t.equals(err, null);
+        t.equals(msg, null);
     }
 
-    reset();
-    vers(env, cb);
+    t.plan(2);
+    fn(env, cb);
 });
 
 test('version mojit (missing mojit name)', function(t) {
-    var env = getenv();
-    
-    env.args = ['mojit'];
+    var env = getenv(['mojit']);
 
     env.app = {
         name: 'myapp',
@@ -148,32 +126,24 @@ test('version mojit (missing mojit name)', function(t) {
     };
 
     function cb(err, msg) {
-        var m = log.record.shift();
-        t.equals(err, undefined);
-
-        t.ok(~m.message.indexOf('Please specify a mojit name.'));
-        t.equals(m.level, 'error');
-        
-        t.equals(log.record.shift().message, vers.usage);
-        t.end();
+        t.equals(err, null);
+        t.equals(msg, null);
     }
 
-    reset();
-    vers(env, cb);
+    t.plan(2);
+    fn(env, cb);
 });
 
 
 test('version nonesuch', function(t) {    
-    var env = getenv();
+    var env = getenv(['nonesuch']);
     
-    env.args = ['nonesuch'];
-
     function cb(err, msg) {
-        t.equals(err, undefined);
-        t.end();
+        t.equals(err, null);
+        t.equals(msg, null);
     }
 
-    reset();
-    vers(env, cb);
+    t.plan(2);
+    fn(env, cb);
 });
 

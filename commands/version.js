@@ -7,19 +7,20 @@
 
 var join = require('path').join,
     log = require('../lib/log'),
-    getenv = require('../lib/getenv');
+    getenv = require('../lib/getenv'),
 
+    fmt = require('util').format,
+    EOL = require('os').EOL,
+    out,
+    err,
+    usage;
 
-function error(msg) {
-    log.error(msg);
-    log.info(module.exports.usage);
-}
 
 function version(meta, msg) {
     if (meta && meta.name) {
-        log.info('%s v%s', meta.name, meta.version, msg || '');
+        out.push(fmt('%s v%s %s', meta.name, meta.version, msg || ''));
     } else {
-        error('Missing package.json.');
+        err.push('Missing package.json.');
     }
 }
 
@@ -27,12 +28,14 @@ function mojitVersion(name) {
     if (name) {
         version(getenv(join('./mojits', name)));
     } else {
-        error('Please specify a mojit name.');
+        err.push('Please specify a mojit name.');
     }
 }
 
 function main(env, cb) {
     var type = env.args.shift();
+    out = [];
+    err = [];
 
     switch (type) {
     case undefined:
@@ -42,22 +45,26 @@ function main(env, cb) {
     case 'application':
         version(env.app);
         if (env.mojito) {
-            version(env.mojito, '(installed locally)');
+            version(env.mojito, 'at ' + env.mojito.path);
         }
         break;
     case 'mojit':
         mojitVersion(env.args.shift());
         break;
     default:
-        error('Unrecognized parameter: ' + type);
+        err.push(fmt('Unrecognized parameter: %s%s%s', type, EOL, usage));
     }
 
-    cb();
+    if (err.length) {
+        log.error(err.join(EOL));
+    }
+
+    cb(null, out.join(EOL) || null);
 }
 
 module.exports = main;
 
-module.exports.usage = [
+module.exports.usage = usage = [
     'Usage: mojito version [app] [mojit <mojitname>]',
     'Display the version of the mojito-cli, current app, or specified mojit.',
     'Version of application or mojit depend on package.json in current directory.'

@@ -14,7 +14,7 @@ function done(err, msg) {
         process.exit(err.errno || 1);
         //todo put stack trace, orig error string in log file?
     } else if(msg) {
-        log.info(msg);
+        console.log(msg);
     }
 }
 

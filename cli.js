@@ -11,15 +11,22 @@ var resolve = require('path').resolve,
     getenv = require('./lib/getenv');
 
 
+/**
+ * wrap `require` in a try/catch with some debug logging
+ * @param {string} str require pathname
+ * @return {object|false} module returned by `require`, or false
+ */
 function tryRequire(str) {
     var mod = false;
     try {
         mod = require(str);
         log.debug('required %s', str);
     } catch(err) {
-        if ('MODULE_NOT_FOUND' === err.code) {
-            log.debug('module %s was not found', str);
+        if (('MODULE_NOT_FOUND' === err.code) && ~err.message.indexOf(str)) {
+            // could not find the module using "str"
+            log.debug('module %s not found', str);
         } else {
+            // module was loaded, and threw an exception
             log.debug('module error', err);
         }
     }
@@ -27,7 +34,10 @@ function tryRequire(str) {
 }
 
 /**
- * load a module for use as a subcommand
+ * try to require a module for use as a subcommand by looking in these places:
+ * - require’ing the command-key value from the commands hash in config.json
+ * - require’ing 'mojito-cli-' + cmd
+ * - require’ing the command name from the mojito library path
  * @param {string} sub-command, like 'help', 'create', etc.
  * @param {object} cli, app, and mojito, metadata
  * @return {object|function} module loaded via `require`
@@ -58,8 +68,10 @@ function load(cmd, env) {
 /**
  * invoke subcommand with env metadata and callback
  * @param {object} env
+ *   @param {string} command, the first non-option cli arg (i.e. "create")
  *   @param {array} args command line arguments (see getopts.js)
  *   @param {object} opts command line options (see getopts.js)
+ *   @param {array} orig the argv array originaly passed to index.js
  *   @param {string} cwd absolute path to current working directory
  *   @param {object} cli metadata (see getenv.js:cli())
  *   @param {object|false} app metadata (see getenv.js:read())
@@ -71,6 +83,9 @@ function exec(env, cb) {
 
     // re-parse command line arguments; may modify env.args & env.opts
     getopts.redux(env, mod.options);
+
+    // display with --log silly, too verbose for --debug
+    log.silly('env:', env);
 
     if (mod && mod.hasOwnProperty('run')) {
         log.debug('invoking legacy command %s', env.command);
@@ -94,7 +109,8 @@ function exec(env, cb) {
  */
 function main(argv, cwd, cb) {
     var cli = getenv.cli(__dirname),
-        env = getopts(argv, cli.options);
+        env = getopts(argv, cli.options), // {command:"…", args:{…}, opts:{…}}
+        lib = env.opts.libmojito; // alternate path to mojito library
 
     if (env.opts.loglevel) {
         log.level = env.opts.loglevel;
@@ -106,12 +122,16 @@ function main(argv, cwd, cb) {
         env.command = 'help';
     }
 
+    // apply command alias, i.e. "docs" -> "doc"
+    if (!cli.commands[env.command] && cli.aliases[env.command]) {
+        env.command = cli.aliases[env.command];
+    }
+
     // collect parsed args and env metadata
     env.cwd = cwd;
     env.cli = cli;
     env.app = (cwd !== __dirname) && getenv(cwd);
-    env.mojito = (env.app || env.opts.lib) && getenv.mojito(cwd, env.opts.lib);
-    log.silly('env:', env);
+    env.mojito = (env.app || lib) && getenv.mojito(cwd, lib);
 
     exec(env, cb);
     return env.command;
