@@ -25,13 +25,6 @@ function help(env) {
 
     out.push('Available commands: ' + commands.join(', '));
 
-    if (!env.mojito) {
-        out.push(
-            'Additional commands are available from within an application directory that',
-            'has mojito installed.'
-        );
-    }
-
     return out.join(EOL);
 }
 
