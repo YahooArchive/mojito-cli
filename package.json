@@ -28,8 +28,7 @@
     "lint": "jshint {.,lib,commands}/*.js",
     "test": "tap tests/index.js",
     "cover": "istanbul cover --dir artifacts/coverage tests",
-    "clean": "git clean -dfx {.,tests,tests/fixtures}/artifacts",
-    "preinstall": "scripts/preinstall.sh"
+    "clean": "git clean -dfx {.,tests,tests/fixtures}/artifacts"
   },
   "repository": "git://github.com/yahoo/mojito-cli.git",
   "bugs": "https://github.com/yahoo/mojito-cli/issues",
