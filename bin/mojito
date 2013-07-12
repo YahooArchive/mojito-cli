@@ -9,15 +9,18 @@ var cli = require('../cli'),
 
 
 function done(err, msg) {
-    var code;
     if(err) {
-        code = err.errno || 1;
-        log.error(err instanceof Error ? err.message : err);
+        if (err instanceof Error) {
+            log.debug(err);
+            log.error(err.message);
+            process.exit(err.errno || 11);
+        } else {
+            log.error(err);
+            process.exit(1);
+        }
     } else if(msg) {
-        code = 0;
         console.log(msg);
     }
-    process.exit(code);
 }
 
 cli(process.argv.slice(2), process.cwd(), done);
