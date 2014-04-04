@@ -1,36 +1,36 @@
 {
-  "name": "mojito-cli",
-  "version": "0.2.0",
-  "description": "The mojito-cli package provides command line helpers for Mojito developers.",
-  "bin": {
-    "mojito": "bin/mojito"
-  },
-  "main": "cli.js",
-  "preferGlobal": true,
-  "dependencies": {
-    "mojito-cli-create": "~0.1",
-    "mojito-cli-doc": "~0.0.1",
-    "mojito-cli-jslint": "~0.0.1",
-    "mojito-cli-test": "~0.0.2",
-    "nopt": "~2.1.1",
-    "npmlog": "0.0.2"
-  },
-  "devDependencies": {
-    "tap": "~0.4.1"
-  },
-  "engines": {
-    "node": ">0.8",
-    "npm": ">1.1"
-  },
-  "scripts": {
-    "lint": "jshint {.,lib,commands}/*.js*",
-    "test": "tap tests/index.js",
-    "cover": "istanbul cover --dir artifacts/coverage tests",
-    "clean": "git clean -dfX **/artifacts"
-  },
-  "repository": "git://github.com/yahoo/mojito-cli.git",
-  "bugs": "https://github.com/yahoo/mojito-cli/issues",
-  "author": "Isao Yagi <isao@yahoo-inc.com>",
-  "license": "BSD",
-  "readmeFilename": "README.md"
+    "name": "mojito-cli",
+    "version": "0.3.0",
+    "description": "The mojito-cli package provides command line helpers for Mojito developers.",
+    "bin": {
+        "mojito": "bin/mojito"
+    },
+    "main": "cli.js",
+    "preferGlobal": true,
+    "dependencies": {
+        "mojito-cli-create": "git+ssh://git@github.com:yahoo/mojito-cli-create.git#generator",
+        "mojito-cli-doc": "0.0.x",
+        "mojito-cli-jslint": "0.0.x",
+        "mojito-cli-test": "0.0.x",
+        "nopt": "2.2.x",
+        "npmlog": "0.0.x"
+    },
+    "devDependencies": {
+        "tap": "~0.4.1"
+    },
+    "engines": {
+        "node": ">0.8",
+        "npm": ">1.1"
+    },
+    "scripts": {
+        "lint": "jshint {.,lib,commands}/*.js*",
+        "test": "tap tests/index.js",
+        "cover": "istanbul cover --dir artifacts/coverage tests",
+        "clean": "git clean -dfX **/artifacts"
+    },
+    "repository": "git://github.com/yahoo/mojito-cli.git",
+    "bugs": "https://github.com/yahoo/mojito-cli/issues",
+    "author": "Isao Yagi <isao@yahoo-inc.com>",
+    "license": "BSD",
+    "readmeFilename": "README.md"
 }
